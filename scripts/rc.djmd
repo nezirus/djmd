@@ -1,0 +1,113 @@
+#!/bin/bash
+
+# /etc/rc.d/rc.djmd
+#
+# Don't Judge Mail startup script
+#
+# Copyright (c) 2012-2013 Adis Nezirovic <adis at localhost.ba>
+
+
+DAEMON_NAME=djmd
+DJMD_CONF=${DJMD_CONF:-'/etc/djmd.conf'}
+PID_FILE=${PID_FILE:-'/var/run/djmd/djmd.pid'}
+VENV=${VENV:-'/usr/lib/djm/virtualenv'}
+BIN_DIR=${BIN_DIR:-'/usr/bin'}
+
+
+init_virtualenv()
+{
+	if [ ! -z  $VENV ];then
+		if [ -r $VENV/bin/activate ]; then
+			source $VENV/bin/activate
+		else
+			echo 'Error: Could not activate python virtualenv.'
+			echo '       Please check your configuration.'
+			exit 1
+		fi
+	fi
+}
+
+
+start_daemon()
+{
+	echo "Starting $DAEMON_NAME ..."
+
+	if [ ! -z  $BIN_DIR ];then
+		init_virtualenv
+		$BIN_DIR/$DAEMON_NAME --conf $DJMD_CONF --pid-file $PID_FILE
+	else
+		echo "Error: Could not find '$DAEMON_NAME' binary."
+		exit 1
+	fi
+}
+
+
+stop_daemon()
+{
+	echo "Stopping $DAEMON_NAME ..."
+
+	if [ ! -z $PID_FILE ];then
+		if [ -r $PID_FILE ];then
+			kill -s TERM $(cat $PID_FILE)
+		else
+			echo "Error: Could not find PID file. Is the deamon running?"
+		fi
+	else
+		echo "Error: Could not find PID file"
+		exit 1
+	fi
+}
+
+
+reload_daemon()
+{
+	if [ ! -z $PID_FILE ];then
+		kill -s HUP $(cat $PID_FILE)
+	else
+		echo "Error: Could not find PID file"
+		exit 1
+	fi
+}
+
+
+check_daemon()
+{
+	PID_FROM_FILE=$(cat $PID_FILE 2> /dev/null)
+	PID_FROM_PS=$(pgrep -f $BIN_DIR/$DAEMON_NAME)
+
+	if [ ! -z $PID_FROM_PS ];then
+		if [ "x$PID_FROM_PS" = "x$PID_FROM_FILE" ]; then
+			echo "$DAEMON_NAME is running (pid $PID_FROM_PS)"
+		fi
+	else
+		echo "$DAEMON_NAME is not running"
+	fi
+
+}
+
+case $1 in
+	'start')
+		start_daemon
+	;;
+
+	'stop')
+		stop_daemon
+	;;
+
+	'restart')
+		stop_daemon
+		start_daemon
+	;;
+
+	'reload')
+		reload_daemon
+	;;
+
+	'status')
+		check_daemon
+	;;
+	
+	*)
+		echo "Usage: $O {start|stop|restart|reload|status}"
+	;;
+esac

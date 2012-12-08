@@ -1,0 +1,10 @@
+^\.virtualenv
+^\.bootstrap\/virtualenv.py
+\.pyc$
+\.swp$
+^MANIFEST
+^PKG-INFO
+^dist\/
+^build\/
+^scripts\/rc\.djmd\.local
+^scripts\/test\.sh

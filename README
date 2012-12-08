@@ -1,0 +1,43 @@
+Don't Judge Mail
+================
+
+DJM is a daemon which implements Postfix Policy Delegation Protocol, 
+see http://www.postfix.org/SMTPD_POLICY_README.html
+
+djmd implements TCP server which communicates with Postfix.
+All decision making is delegated to policy plugins, which implement
+desired functionality (e.g. greylisting, quota/rate limiting).
+
+DJM is licensed under the terms of GNU GPL v3 license, see COPYING for license
+text.
+
+Installation
+------------
+
+Don't Judge Mail requires Python 2.6 or later 2.x version.
+
+As soon as Gevent supports Python 3, we will support it too.
+(Python 3.2 or later)
+
+The following additional python libraries are required:
+
+ * Gevent 1.0 or later
+ * python-daemon 1.5 or later
+ * psycopg2 2.4 or later
+
+You install them using your system package manager, or prepare Python
+virtualenv (see '.bootstrap' directory in the source distribution).
+
+
+
+System wide installation
+++++++++++++++++++++++++
+
+  # python setup.py install
+
+
+
+Local installation
+++++++++++++++++++
+
+You can also install and run DJM using virtualenv and pip
