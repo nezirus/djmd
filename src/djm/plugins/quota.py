@@ -58,7 +58,8 @@ class Quota(object):
 
 	def __call__(self, request):
 
-		db = connect(self.conf, 'quota')
+		db_name = self.conf.get('database', 'plugin:quota', 'default')
+		db = connect(self.conf, db_name)
 
 		if not db:
 			return PolicyResponse().dunno()
@@ -338,7 +339,9 @@ class Quota(object):
 			--- ^^^ don't do this ^^^
 		'''
 
-		db = connect(self.conf, 'quota')
+		db_name = self.conf.get('database', 'plugin:quota', 'default')
+		db = connect(self.conf, db_name)
+
 		if not db:
 			return
 
@@ -358,7 +361,8 @@ class Quota(object):
 			DROP TYPE quota_limit;
 		'''
 
-		db = connect(self.conf, 'quota')
+		db_name = self.conf.get('database', 'plugin:quota', 'default')
+		db = connect(self.conf, db_name)
 		if not db:
 			return
 
