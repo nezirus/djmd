@@ -3,8 +3,11 @@
 # /etc/rc.d/rc.djmd
 #
 # Don't Judge Mail startup script
+# 
+# The script is pretty generic, but it should give you an ide
+# how to write your own DJM startup script.
 #
-# Copyright (c) 2012-2013 Adis Nezirovic <adis at localhost.ba>
+# Copyright (c) 2012-2013 Adis Nezirović <adis at localhost.ba>
 
 
 DAEMON_NAME=djmd

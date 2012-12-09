@@ -2,10 +2,9 @@
 
 # $Revision$
 
-# Virtualenv bootstrap script Date: 2012-08-15
+# Virtualenv bootstrap script.
 #
 # Copyright (C) 2012-2013 Adis Nezirović <adis at localhost.ba>
-
 
 VIRTUALENV_URL="https://raw.github.com/pypa/virtualenv/master/virtualenv.py"
 SCRIPT_PATH=$(readlink -f $0)

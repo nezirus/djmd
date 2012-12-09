@@ -30,7 +30,6 @@ from djm.policy import PolicyResponse
 from djm.database import connect, cursor, IntegrityError
 from djm.logging import info, warn, error
 
-
 class Greylist(object):
 	def __init__(self, conf):
 		'''x'''

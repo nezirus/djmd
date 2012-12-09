@@ -25,13 +25,13 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
+
 import sys
 
 from djm.policy import PolicyResponse
 from djm.database import connect, cursor, IntegrityError
 from djm.logging import info, warn, error
 from djm.postfix import hosted_domains
-
 
 class Quota(object):
 	''' Introduce quotas for some of the email server resources.
