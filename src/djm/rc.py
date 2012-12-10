@@ -25,8 +25,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 import sys
 
-from . import version
-from .logging import error
+from djm.logging import error
 
 try:
 	import configparser
