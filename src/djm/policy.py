@@ -128,6 +128,7 @@ class PolicyDaemon(object):
 		self._init_plugins()
 		
 		self.ctx.pidfile = LockFile(self.conf.get('pid_file'), acquire_timeout=-1)
+		self.server = None
 
 	def _init_plugins(self):
 		plugins = self.conf.get('plugins').strip()
@@ -153,31 +154,27 @@ class PolicyDaemon(object):
 				error('Plugin not found: %s' % (plugin), fatal=True)
 			# TODO: close file_?
 
-	def terminate(*args):
+	def terminate(self):
 		'''@callback (SIGTERM handler)'''
-		self = args[0]
 		info('Policy daemon terminating.')
+		self.server.close()
 		sys.exit(1)	
 	
-	def restart(*args):
+	def restart(self):
 		'''@callback (SIGUSR1 handler)'''
-		self = args[0]
 		info('Policy daemon restarting')
 
-	def reload(*args):
+	def reload(self):
 		'''@callback (SIGHUP handler)'''
-		self = args[0]
 		info('Policy daemon reloading')
 
-	def handle_request(*args):
+	def handle_request(self, sock, address):
 		'''@callback (StreamServer worker)
 
 		Parse policy request data supplied by Postfix and respond
 		with Postfix access(5) string
 		'''
-		self = args[0]
-		sock = args[1]
-		addr, port = args[2]
+		addr, port = address
 
 		if self.allow_hosts and addr not in self.allow_hosts:
 			warn('Access denied for host %s' % (addr))
@@ -238,12 +235,12 @@ class PolicyDaemon(object):
 	def run(self):
 		try:
 			with self.ctx:
-				server = StreamServer(self.address, self.handle_request,
+				self.server = StreamServer(self.address, self.handle_request,
 					spawn=int(self.conf.get('servers')))
 				closelog()
 				openlog('djmd'.encode('ascii'))
 				info('Policy daemon started')
-				server.serve_forever()
+				self.server.serve_forever()
 		except AlreadyLocked:
 			error('PID file \'%s\' ' % (self.conf.get('pid_file')) +
 				'already exists. Either the daemon is already running' + 
