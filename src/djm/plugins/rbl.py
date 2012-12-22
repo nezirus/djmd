@@ -28,15 +28,10 @@ from __future__ import unicode_literals
 
 import sys
 
-from djm.policy import PolicyResponse
+from djm.policy import PolicyPlugin, PolicyResponse
 from djm.logging import info
 
-class Rbl(object):
-	def __init__(self, conf):
-		'''x'''
-		self.conf = conf
-
-
+class Rbl(PolicyPlugin):
 	def __call__(self, request):
 		return PolicyResponse().dunno()
 

@@ -28,15 +28,10 @@ from __future__ import unicode_literals
 
 import sys
 
-from djm.policy import PolicyResponse
+from djm.policy import PolicyPlugin, PolicyResponse
 from djm.logging import info
 
-class Demo(object):
-	def __init__(self, conf):
-		'''x'''
-		self.conf = conf
-
-
+class Demo(PolicyPlugin):
 	def __call__(self, request):
 
 		for k,v in request.items():

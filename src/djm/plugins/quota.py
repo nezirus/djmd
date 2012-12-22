@@ -33,7 +33,7 @@ from djm.database import connect, cursor, IntegrityError
 from djm.logging import info, warn, error
 from djm.postfix import hosted_domains
 
-class Quota(object):
+class Quota(PolicyPlugin):
 	''' Introduce quotas for some of the email server resources.
 		 * Number of sent/recieved emails
 		 * Recipient count
@@ -54,12 +54,16 @@ class Quota(object):
 	'''
 
 	def __init__(self, conf):
+		self.set_conf(conf)
+
+	def set_conf(self, conf):
 		self.conf = conf
 
 	def __call__(self, request):
+		conf = self.conf
 
-		db_name = self.conf.get('database', 'plugin:quota', 'default')
-		db = connect(self.conf, db_name)
+		db_name = conf.get('database', 'plugin:quota', 'default')
+		db = connect(conf, db_name)
 
 		if not db:
 			return PolicyResponse().dunno()
@@ -88,7 +92,7 @@ class Quota(object):
 		sd = quota_keys['sender_domain']
 		rd = quota_keys['recipient_domain']
 
-		if self.conf.get('ignore_local', 'plugin:quota') == 'true' and \
+		if conf.get('ignore_local', 'plugin:quota') == 'true' and \
 			(sd == rd or ((sd in hd) and (rd in hd))):
 			return PolicyResponse().dunno()
 

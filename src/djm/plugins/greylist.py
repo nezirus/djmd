@@ -26,18 +26,14 @@ from __future__ import unicode_literals
 from __future__ import division
 import sys
 
-from djm.policy import PolicyResponse
+from djm.policy import PolicyPlugin, PolicyResponse
 from djm.database import connect, cursor, IntegrityError
 from djm.logging import info, warn, error
 
-class Greylist(object):
-	def __init__(self, conf):
-		'''x'''
-		self.conf = conf
-
+class Greylist(PolicyPlugin):
 	def __call__(self, request):
-
-		db = connect(self.conf, 'greylist')
+		conf = self.conf
+		db = connect(conf, 'greylist')
 
 		return PolicyResponse().dunno()
 

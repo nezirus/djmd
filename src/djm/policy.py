@@ -85,6 +85,15 @@ class PolicyResponse(object):
 		self.msg = 'Invalid policy request.'
 		return self
 
+class PolicyPlugin(object):
+	def __init__(self, conf):
+		self.conf = conf
+
+	def set_conf(self, conf):
+		self.conf = conf
+
+	def __call__(self, request):
+		return PolicyResponse().dunno()
 
 class PolicyDaemon(object):
 	'''Don't Judge Mail - A Postfix Policy Daemon'''
@@ -115,6 +124,15 @@ class PolicyDaemon(object):
 		if self.conf.has('debug'):
 			self.ctx.stderr = sys.stderr
 
+		self._parse_access_rules()
+
+		# init plugins
+		self._init_plugins()
+		
+		self.ctx.pidfile = LockFile(self.conf.get('pid_file'), acquire_timeout=-1)
+		self.server = None
+	
+	def _parse_access_rules(self):
 		# access control
 		hosts = self.conf.get('allow_hosts').strip()
 
@@ -122,12 +140,6 @@ class PolicyDaemon(object):
 			self.allow_hosts = None
 		else:
 			self.allow_hosts = [h.strip() for h in hosts.split(',')]
-
-		# init plugins
-		self._init_plugins()
-		
-		self.ctx.pidfile = LockFile(self.conf.get('pid_file'), acquire_timeout=-1)
-		self.server = None
 
 	def _init_plugins(self):
 		plugins = self.conf.get('plugins').strip()
@@ -162,6 +174,16 @@ class PolicyDaemon(object):
 	def reload(self, *args):
 		'''@callback (SIGHUP handler)'''
 		info('Policy daemon reloading')
+		self.conf = ConfParser()
+
+		# Global configuration parameters which can't be handled
+		# by reload are: listen, servers, plugins
+		# Note that plugins should treat conf parameter as volatile
+		for p in self.plugins:
+			p.set_conf(self.conf)
+
+		self._parse_access_rules()
+
 
 	def handle_request(self, sock, address):
 		'''@callback (StreamServer worker)
