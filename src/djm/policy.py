@@ -109,7 +109,6 @@ class PolicyDaemon(object):
 		self.ctx.signal_map = {
 			SIGTERM: self.terminate,
 			SIGQUIT: self.terminate,
-			SIGUSR1: self.restart,
 			SIGHUP: self.reload,
 		}
 
@@ -160,10 +159,6 @@ class PolicyDaemon(object):
 		self.server.stop()
 		sys.exit(1)	
 	
-	def restart(self):
-		'''@callback (SIGUSR1 handler)'''
-		info('Policy daemon restarting')
-
 	def reload(self):
 		'''@callback (SIGHUP handler)'''
 		info('Policy daemon reloading')
