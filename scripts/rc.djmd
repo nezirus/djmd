@@ -65,7 +65,11 @@ stop_daemon()
 reload_daemon()
 {
 	if [ ! -z $PID_FILE ];then
-		kill -s HUP $(cat $PID_FILE)
+		if [ -r $PID_FILE ];then
+			kill -s HUP $(cat $PID_FILE)
+		else
+			echo "Error: Could not find PID file. Is the deamon running?"
+		fi
 	else
 		echo "Error: Could not find PID file"
 		exit 1
