@@ -157,7 +157,7 @@ class PolicyDaemon(object):
 	def terminate(self):
 		'''@callback (SIGTERM handler)'''
 		info('Policy daemon terminating.')
-		self.server.close()
+		self.server.stop()
 		sys.exit(1)	
 	
 	def restart(self):
