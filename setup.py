@@ -1,12 +1,27 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-#
+# $Revision$
+
 # Don't Judge Mail setup script.
 #
-# './setup.py install', or
-# './setup.py --help' for more options
-
+# Copyright (C) 2012-2013 Adis Nezirović <adis at localhost.ba>
+#
+# 'python setup.py install', or
+# 'python setup.py --help' for more options
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 # TODO: Distutils doesn't handle Unicode
 # from __future__ import unicode_literals
@@ -24,11 +39,11 @@ from distutils.core import setup
 
 setup(name='djm',
 	version=version,
-	author='Adis Nezirović',
+	author='Adis Nezirovic',
 	author_email='adis at localhost.ba',
 	url='http://djm.localhost.ba',
 	description='Postfix Policy Daemon',
-	long_description='Postfix Policy Daemon written with Python/gevent',
+	long_description='Postfix Policy Daemon written with Python and Gevent',
 	license='GNU GPL v3+',
 	packages=['djm'],
 	package_dir={'djm': 'src/djm'},
@@ -38,7 +53,7 @@ setup(name='djm',
 		('/etc', ['src/djmd.conf']),
 	],
 	requires=('gevent (>=1.0)', 'python_daemon (>=1.5)', 'psycopg2 (>=2.4)'),
-	keywords=('postfix', 'policy', 'daemon', 'greylisting', 'quota'),
+	keywords=('postfix', 'policy', 'daemon', 'greylisting', 'quota', 'rbl'),
 	classifiers=[
 		'Development Status :: 5 - Production/Stable',
 		'Environment :: Console',
