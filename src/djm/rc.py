@@ -70,11 +70,13 @@ class ConfParser(object):
 			self.parser = configparser.SafeConfigParser()
 
 			if not self.cmdline['conf_file']:
-				# OK, no conf file. Add default section where we cmdline args
+				# OK, no conf file. Add default section where the cmdline args
 				# shall be saved (btw, one can't add section named 'default')
 				self.parser.add_section('djmd')
 			else:
-				self.parser.readfp(open(self.cmdline['conf_file']))
+				cf = open(self.cmdline['conf_file'])
+				self.parser.readfp(cf)
+				cf.close()
 
 			for k, v in self.cmdline.items():
 				if v:

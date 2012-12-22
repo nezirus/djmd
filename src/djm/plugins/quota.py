@@ -28,7 +28,7 @@ from __future__ import division
 
 import sys
 
-from djm.policy import PolicyResponse
+from djm.policy import PolicyPlugin, PolicyResponse
 from djm.database import connect, cursor, IntegrityError
 from djm.logging import info, warn, error
 from djm.postfix import hosted_domains
