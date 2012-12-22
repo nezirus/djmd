@@ -31,8 +31,8 @@ from signal import SIGTERM, SIGQUIT, SIGHUP, SIGUSR1
 from daemon import DaemonContext
 from daemon.pidfile import TimeoutPIDLockFile as LockFile
 from lockfile import AlreadyLocked, LockFailed
-from logging import openlog, closelog, debug, info, warn, error
 
+from djm.logging import openlog, closelog, debug, info, warn, error
 from djm.rc import ConfParser
 
 class PolicyResponse(object):
