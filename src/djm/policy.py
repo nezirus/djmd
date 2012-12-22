@@ -153,13 +153,13 @@ class PolicyDaemon(object):
 				error('Plugin not found: %s' % (plugin), fatal=True)
 			# TODO: close file_?
 
-	def terminate(self):
+	def terminate(self, *args):
 		'''@callback (SIGTERM handler)'''
 		info('Policy daemon terminating.')
 		self.server.stop()
 		sys.exit(1)	
 	
-	def reload(self):
+	def reload(self, *args):
 		'''@callback (SIGHUP handler)'''
 		info('Policy daemon reloading')
 
