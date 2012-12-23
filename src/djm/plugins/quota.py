@@ -62,7 +62,7 @@ class Quota(PolicyPlugin):
 	def __call__(self, request):
 		conf = self.conf
 
-		db_name = conf.get('database', 'plugin:quota', 'default')
+		db_name = conf.get('database', 'plugin:quota', 'default', mandatory=False)
 		db = connect(conf, db_name)
 
 		if not db:
@@ -365,7 +365,7 @@ class Quota(PolicyPlugin):
 			DROP TYPE quota_limit;
 		'''
 
-		db_name = self.conf.get('database', 'plugin:quota', 'default')
+		db_name = self.conf.get('database', 'plugin:quota', 'default', mandatory=False)
 		db = connect(self.conf, db_name)
 		if not db:
 			return

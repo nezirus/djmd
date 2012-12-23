@@ -33,7 +33,8 @@ from djm.logging import info, warn, error
 class Greylist(PolicyPlugin):
 	def __call__(self, request):
 		conf = self.conf
-		db = connect(conf, 'greylist')
+		db_name = conf.get('database', 'plugin:greylist', 'default', mandatory=False)
+		db = connect(conf, db_name)
 
 		return PolicyResponse().dunno()
 
