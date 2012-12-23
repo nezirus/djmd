@@ -27,7 +27,7 @@ import os
 from imp import find_module, load_module
 from gevent import socket
 from gevent.server import StreamServer
-from signal import SIGTERM, SIGQUIT, SIGHUP, SIGUSR1
+from signal import SIGTERM, SIGQUIT, SIGHUP
 from daemon import DaemonContext
 from daemon.pidfile import TimeoutPIDLockFile as LockFile
 from lockfile import AlreadyLocked, LockFailed
@@ -167,9 +167,14 @@ class PolicyDaemon(object):
 
 	def terminate(self, *args):
 		'''@callback (SIGTERM handler)'''
+
+		if self.server.closed:
+			# Multiple TERM/KILL signals
+			info('Policy daemon aborting.')
+			sys.exit(1)	
+
 		info('Policy daemon terminating.')
 		self.server.stop()
-		sys.exit(1)	
 	
 	def reload(self, *args):
 		'''@callback (SIGHUP handler)'''
@@ -257,6 +262,8 @@ class PolicyDaemon(object):
 				closelog()
 				openlog('djmd'.encode('ascii'))
 				info('Policy daemon started')
+				if self.conf.has('debug'):
+					info('Debugging enabled')
 				self.server.serve_forever()
 		except AlreadyLocked:
 			error('PID file \'%s\' ' % (self.conf.get('pid_file')) +
