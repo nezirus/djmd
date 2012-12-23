@@ -225,13 +225,13 @@ class PolicyDaemon(object):
 
 		if 'request' not in request:
 			postfix.write(PolicyResponse().reject_invalid())
-			postfix.flush()
+			postfix.close()
 			return
 
 		# don't police stressed Postfix
 		if 'stress' in request and request['stress'] == 'yes':
 			postfix.write(PolicyResponse().dunno())
-			postfix.flush()
+			postfix.close()
 			return
 
 		response = None
@@ -242,7 +242,7 @@ class PolicyDaemon(object):
 			if response.action in ('reject', 'defer_if_permit',
 					'defer_if_reject'):
 				postfix.write(response)
-				postfix.flush()
+				postfix.close()
 				return
 
 		if response:
@@ -252,7 +252,7 @@ class PolicyDaemon(object):
 			# Failsafe policy response
 			postfix.write(PolicyResponse().dunno())
 
-		postfix.flush()
+		postfix.close()
 		
 	def run(self):
 		try:
