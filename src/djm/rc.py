@@ -25,32 +25,38 @@ from __future__ import print_function
 from __future__ import unicode_literals
 import sys
 
-from djm.logging import error
-
+from argparse import ArgumentParser
 try:
 	import configparser
 except ImportError:
 	import ConfigParser as configparser
 
-from argparse import ArgumentParser
+from djm.logging import error
 
 class ConfParser(object):
-	def __init__(self):
-		'''Thin wrapper for ConfigParser and ArgumentParser
+	'''Thin wrapper for ConfigParser and ArgumentParser
+		* Supports "non-mandatory" conf options
+		* Supports "default" values for conf options
+		* Command line options can override conf options
+		* You don't need to specify section for get() method
+	'''
 
-			* Supports "non-mandatory" conf options
-			* Supports "default" values for conf options
-			* Command line options can override conf options
-			* You don't need to specify section for get() method
+	def __init__(self, default_section='djmd'):
+		'''
+		Keyword arguments:
+		default_section -- Section name for get() calls
 		'''
 
-		cmd_parser = ArgumentParser(description='Don\'t Judge Mail - Postfix Policy Daemon')
-		cmd_parser.add_argument('--conf', dest='conf_file',
-			default=None)
+		self.default_section = default_section
+		cmd_parser = ArgumentParser(description=
+			'Don\'t Judge Mail - Postfix Policy Daemon')
+
+		# Options with no counterpart in conf file
+		cmd_parser.add_argument('--conf', dest='conf_file')
 		cmd_parser.add_argument('--version', action='store_true', default=False)
-		# Configuration overrides
-		# NOTE: Don't specify defaults! Defaults should be provided
-		#       in configuration file
+
+		# Overridable options
+		# Defaults should be provided in configuration file, not here
 		cmd_parser.add_argument('--allow-hosts', metavar='HOST1,HOST2')
 		cmd_parser.add_argument('--debug', action='store_true')
 		cmd_parser.add_argument('--listen', metavar='IP_ADDR:PORT')
@@ -65,14 +71,13 @@ class ConfParser(object):
 			print('djmd v%s'%(version))
 			sys.exit(0)
 
-
 		try:
 			self.parser = configparser.SafeConfigParser()
 
-			if not self.cmdline['conf_file']:
+			if 'conf_file' not in self.cmdline:
 				# OK, no conf file. Add default section where the cmdline args
 				# shall be saved (btw, one can't add section named 'default')
-				self.parser.add_section('djmd')
+				self.parser.add_section(default_section)
 			else:
 				cf = open(self.cmdline['conf_file'])
 				self.parser.readfp(cf)
@@ -87,10 +92,18 @@ class ConfParser(object):
 			error('Could not open configuration file: %s' %
 				(self.cmdline['conf_file']), sys.stderr)
 
+	def get(self, option, section=None, default=None, mandatory=True):
+		'''Get an option value for the named section
 
-	def get(self, option, section='djmd', default=None, mandatory=True):
+		Keyword arguments:
+		section -- Section name override
+		mandatory -- Enforce existance of option value
+		default -- Default value for non mandatory options
+		'''
+
+		s = section if section else self.default_section
 		try:
-			return self.parser.get(section, option)
+			return self.parser.get(s, option)
 		except configparser.NoOptionError as e:
 			if not mandatory:
 				return default
@@ -99,21 +112,37 @@ class ConfParser(object):
 		except configparser.Error as e:
 			error('Configuration problem: %s' % (e))
 
+	def set(self, option, value, section=None):
+		'''Set the given option to the specified value
 
-	def set(self, option, value, section='djmd'):
+		Keyword arguments:
+		section -- Section name override
+		'''
+		s = section if section else self.default_section
 		try:
-			self.parser.set(section, option, value)
+			self.parser.set(s, option, value)
 		except configparser.NoSectionError as e:
 			error('Configuration problem: %s' % (e))
 
+	def has(self, option, section=None):
+		'''If the given section exists, and contains the given option,
+		return True; otherwise return False.
 
-	def has(self, option, section='djmd'):
-		return self.parser.has_option(section, option)
+		Keyword arguments:
+		section -- Section name override for set() calls
+		'''
+		s = section if section else self.default_section
+		return self.parser.has_option(s, option)
 
+	def items(self, section=None):
+		'''Return a list of (name, value) pairs for each option
+		in the given section.
 
-	def items(self, section='djmd'):
+		Keyword arguments:
+		section -- Section name override
+		'''
+		s = section if section else self.default_section
 		try:
-			return self.parser.items(section)
+			return self.parser.items(s)
 		except configparser.Error as e:
 			error('Configuration problem: %s' % (e))
-
