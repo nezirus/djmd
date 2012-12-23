@@ -53,12 +53,6 @@ class Quota(PolicyPlugin):
 		standard keys.
 	'''
 
-	def __init__(self, conf):
-		self.set_conf(conf)
-
-	def set_conf(self, conf):
-		self.conf = conf
-
 	def __call__(self, request):
 		conf = self.conf
 
