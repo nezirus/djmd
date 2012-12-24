@@ -43,14 +43,25 @@ class PolicyResponse(object):
 	def __init__(self, action=None, msg=None):
 		self.action = action
 		self.msg = msg
+		self.p = []
 
 	def __repr__(self):
+		result = ''
+
+		for pr in self.p:
+			result += 'PREPEND {0}\n'.format(pr)
+
 		if not self.action:
-			return 'action=dunno\n\n'
+			result += 'action=dunno\n\n'
 		elif not self.msg:
-			return 'action=%s\n\n' % (self.action)
+			result += 'action={0}\n\n'.format(self.action)
 		else:
-			return 'action=%s %s\n\n' % (self.action, self.msg)
+			result += 'action={0} {1}\n\n'.format(self.action, self.msg)
+		
+		return result
+	
+	def prepend(self, header, value):
+		self.p.append('{0}: {1}'.format(header, value))
 
 	def dunno(self):
 		self.action = 'dunno'
@@ -62,22 +73,26 @@ class PolicyResponse(object):
 
 	def reject(self, msg=None):
 		self.action = 'reject'
-		self.msg = msg
+		if msg:
+			self.msg = msg
 		return self
 	
 	def defer(self, msg=None):
 		self.action = 'defer'
-		self.msg = msg
+		if msg:
+			self.msg = msg
 		return self
 	
 	def defer_if_permit(self, msg=None):
 		self.action = 'defer_if_permit'
-		self.msg = msg
+		if msg:
+			self.msg = msg
 		return self
 	
 	def defer_if_reject(self, msg=None):
 		self.action = 'defer_if_reject'
-		self.msg = msg
+		if msg:
+			self.msg = msg
 		return self
 
 	def reject_invalid(self):
