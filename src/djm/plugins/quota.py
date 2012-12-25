@@ -65,6 +65,7 @@ class Quota(PolicyPlugin):
 		try:
 			quota_keys = {
 				'sasl_username': request['sasl_username'],
+				'sasl_sender': request['sasl_sender'],
 				'sender': request['sender'],
 				'sender_domain': None,
 				'recipient': request['recipient'],
@@ -79,6 +80,8 @@ class Quota(PolicyPlugin):
 
 		if '@' in request['sasl_username']:
 			quota_keys['sender_domain'] = request['sasl_username'].rsplit('@', 1)[1]
+		elif '@' in request['sasl_sender']:
+			quota_keys['sender_domain'] = request['sasl_sender'].rsplit('@', 1)[1]
 		else:
 			quota_keys['sender_domain'] = request['sender'].rsplit('@', 1)[1]
 
@@ -262,6 +265,7 @@ class Quota(PolicyPlugin):
 			CREATE TYPE quota_key AS ENUM
 			(
 				'sasl_username',
+				'sasl_sender',
 				'sender',
 				'sender_domain',
 				'recipient',
