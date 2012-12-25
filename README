@@ -21,7 +21,7 @@ The following additional Python libraries are required:
 
  * Gevent 1.0 or later
  * python-daemon 1.5 or later
- * psycopg2 2.4 or later
+ * psycopg2 2.4.2 or later
 
 
 DJM also requires a database where it will store runtime data. Currently
