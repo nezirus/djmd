@@ -25,12 +25,13 @@ from __future__ import unicode_literals
 import sys
 import os
 from imp import find_module, load_module
-from gevent import socket
+from gevent import socket, sleep, spawn, wait
 from gevent.server import StreamServer
 from signal import SIGTERM, SIGQUIT, SIGHUP
 from daemon import DaemonContext
 from daemon.pidfile import TimeoutPIDLockFile as LockFile
 from lockfile import AlreadyLocked, LockFailed
+from time import time
 
 from djm.logging import openlog, closelog, debug, info, warn, error
 from djm.rc import ConfParser
@@ -110,12 +111,16 @@ class PolicyPlugin(object):
 	def __call__(self, request):
 		return PolicyResponse().dunno()
 
+	def cron(self):
+		pass
+
 class PolicyDaemon(object):
 	'''Don't Judge Mail - A Postfix Policy Daemon'''
 
 	def __init__(self, conf=None):
 
 		self.conf = conf if conf else ConfParser()
+		self.cron_greenlet = None
 
 		try:
 			listen = self.conf.get('listen')
@@ -189,6 +194,9 @@ class PolicyDaemon(object):
 			sys.exit(1)	
 
 		info('Policy daemon terminating.')
+		if self.cron_greenlet:
+			self.cron_greenlet.kill(block=False)
+
 		self.server.stop()
 	
 	def reload(self, *args):
@@ -268,6 +276,14 @@ class PolicyDaemon(object):
 			postfix.write(PolicyResponse().dunno())
 
 		postfix.close()
+	
+	def cron(self):
+		cron_period = self.conf.get('cron_period')
+
+		while True:
+			sleep(cron_period)
+			for plugin in self.plugins:
+				plugin.cron()
 		
 	def run(self):
 		try:
@@ -279,7 +295,9 @@ class PolicyDaemon(object):
 				info('Policy daemon started')
 				if self.conf.has('debug'):
 					info('Debugging enabled')
-				self.server.serve_forever()
+				self.server.start()
+				self.cron_greenlet = spawn(self.cron)
+				wait()
 		except AlreadyLocked:
 			error('PID file \'%s\' ' % (self.conf.get('pid_file')) +
 				'already exists. Either the daemon is already running' + 

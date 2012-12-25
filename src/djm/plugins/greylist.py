@@ -34,10 +34,6 @@ from gevent import spawn
 from time import time
 
 class Greylist(PolicyPlugin):
-	def __init__(self, conf):
-		super(Greylist, self).__init__(conf)
-		self.cron_active = False
-
 	def __call__(self, request):
 		conf = self.conf
 		db_name = conf.get('database', 'plugin:greylist', 'default', mandatory=False)
