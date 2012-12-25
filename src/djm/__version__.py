@@ -1,7 +1,7 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
-version_info = [1, 0, 0, 'b', 1]
+version_info = [1, 0, 0, 'b', 2]
 version = '.'.join([str(x) for x in version_info[0:3]])
 
 # Final versions should not have anything except X.Y.Z in version string
