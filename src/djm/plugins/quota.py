@@ -341,23 +341,7 @@ class Quota(PolicyPlugin):
 			--- ^^^ don't do this ^^^
 		'''
 
-		db_name = self.conf.get('database', 'plugin:quota', 'default')
-		db = connect(self.conf, db_name)
-
-		if not db:
-			return
-
-		cur = db.cursor()
-		cur.execute(_sql)
-		cur.execute(_sql_data)
-		cur.close()
-		db.commit()
-		db.close()
-
-	def uninstall(self):
-		'''Drop database schema and data for Quota plugin'''
-
-		_sql = '''
+		_sql_drop = '''
 			DROP TABLE IF EXISTS quota_tracking, quota_members, quotas;
 			DROP TYPE quota_key;
 			DROP TYPE quota_limit;
@@ -365,10 +349,11 @@ class Quota(PolicyPlugin):
 
 		db_name = self.conf.get('database', 'plugin:quota', 'default', mandatory=False)
 		db = connect(self.conf, db_name)
-		if not db:
-			return
-
 		cur = db.cursor()
+		cur.execute(_sql_drop)
+		db.commit()
 		cur.execute(_sql)
-		cur.commit()
+		cur.execute(_sql_data)
+		db.commit()
+		cur.close()
 		db.close()

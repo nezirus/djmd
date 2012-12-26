@@ -286,6 +286,23 @@ class PolicyDaemon(object):
 				plugin.cron()
 		
 	def run(self):
+		if self.conf.has('init_database'):
+			print('SQL database initialization...')
+			print('This step will delete all data from djmd SQL database(s)')
+			try:
+				ans = raw_input('''Are you sure? (y/n) ''').strip()
+
+				if ans == 'y':
+					for p in self.plugins:
+						if hasattr(p, 'install'):
+							print('  Initializing {0} plugin...'.format(p.__class__.__name__))
+							p.install()
+			except KeyboardInterrupt as e:
+				print()
+				pass
+			finally:
+				sys.exit(0)
+
 		try:
 			with self.ctx:
 				self.server = StreamServer(self.address, self.handle_request,

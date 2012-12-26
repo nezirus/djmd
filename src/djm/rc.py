@@ -63,6 +63,7 @@ class ConfParser(object):
 		cmd_parser.add_argument('--pid-file', metavar='/PATH/TO/daemon_name.pid')
 		cmd_parser.add_argument('--plugins', metavar='PLUGIN1,PLUGIN2')
 		cmd_parser.add_argument('--servers', metavar='N')
+		cmd_parser.add_argument('--init-database', action='store_true')
 
 		self.cmdline = vars(cmd_parser.parse_args())
 

@@ -44,6 +44,19 @@ start_daemon()
 	fi
 }
 
+init_database()
+{
+	echo "Starting $DAEMON_NAME ..."
+
+	if [ ! -z  $BIN_DIR ];then
+		init_virtualenv
+		$BIN_DIR/$DAEMON_NAME --conf $DJMD_CONF --pid-file $PID_FILE --init-database
+	else
+		echo "Error: Could not find '$DAEMON_NAME' binary."
+		exit 1
+	fi
+}
+
 
 stop_daemon()
 {
@@ -113,8 +126,12 @@ case $1 in
 	'status')
 		check_daemon
 	;;
+
+	'init-database')
+		init_database
+	;;
 	
 	*)
-		echo "Usage: $O {start|stop|restart|reload|status}"
+		echo "Usage: $O {start|stop|restart|reload|status|init-database}"
 	;;
 esac

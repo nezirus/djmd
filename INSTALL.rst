@@ -39,8 +39,6 @@ Run database installation script with:
 
   # djmd --init-database
 
-.. Note:: This feature is not currently implemented.
-
 That's it, you should be able to run DJM with:
 
   # djmd

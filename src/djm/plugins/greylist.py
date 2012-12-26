@@ -153,16 +153,16 @@ class Greylist(PolicyPlugin):
 			);
 		'''
 
+		_sql_drop = '''DROP TABLE greylist_recipient_wl, greylist_sender_wl, 
+			greylist_sender_awl, greylist_tracking;
+		'''
+
 		db_name = self.conf.get('database', 'plugin:greylist', 'default', mandatory=False)
 		db = connect(self.conf, db_name)
-
-		if not db:
-			return
-
-		cur = db.cursor()
+		cur = cursor(db)
+		cur.execute(_sql_drop)
+		db.commit()
 		cur.execute(_sql)
-		cur.execute(_sql_data)
-		cur.close()
 		db.commit()
 		db.close()
 
