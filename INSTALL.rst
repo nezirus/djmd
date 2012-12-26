@@ -18,8 +18,8 @@ in the future.
 We also recommend running connection pooling software for your database.
 e.g. PgBouncer_ for PostgreSQL.
 
-You should install them using your system package manager or you could
-configure Python virtualenv for DJM (see `Local installation`)
+You should install Python requirements using your system package manager
+or you could configure Python virtualenv for DJM (see `Local installation`)
 
 System wide installation
 ------------------------
