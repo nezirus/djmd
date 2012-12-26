@@ -55,7 +55,7 @@ setup(name='djm',
 	requires=('gevent (>=1.0)', 'python_daemon (>=1.5)', 'psycopg2 (>=2.4)'),
 	keywords=('postfix', 'policy', 'daemon', 'greylisting', 'quota', 'rbl'),
 	classifiers=[
-		'Development Status :: 5 - Production/Stable',
+		'Development Status :: 4 - Beta',
 		'Environment :: Console',
 		'Intended Audience :: System Administrators',
 		'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
