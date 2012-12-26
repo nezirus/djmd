@@ -278,7 +278,7 @@ class PolicyDaemon(object):
 		postfix.close()
 	
 	def cron(self):
-		cron_period = self.conf.get('cron_period')
+		cron_period = int(self.conf.get('cron_period'))
 
 		while True:
 			sleep(cron_period)
