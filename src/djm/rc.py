@@ -53,7 +53,7 @@ class ConfParser(object):
 
 		# Options with no counterpart in conf file
 		cmd_parser.add_argument('--conf', dest='conf_file')
-		cmd_parser.add_argument('--version', action='store_true', default=False)
+		cmd_parser.add_argument('--version', action='store_true')
 
 		# Overridable options
 		# Defaults should be provided in configuration file, not here
