@@ -49,10 +49,10 @@ setup(name='djm',
 	package_dir={'djm': 'src/djm'},
 	scripts=['src/djmd'],
 	data_files=[
-		('share/doc/djm', ['LICENSE', 'README.rst', 'scripts/rc.djmd']),
+		('share/doc/djm', ['LICENSE', 'README.rst', 'INSTALL.rst', 'scripts/rc.djmd']),
 		('/etc', ['src/djmd.conf']),
 	],
-	requires=('gevent (>=1.0)', 'python_daemon (>=1.5)', 'psycopg2 (>=2.4)'),
+	requires=('gevent (>=1.0)', 'python_daemon (>=1.5)', 'psycopg2 (>=2.4.2)'),
 	keywords=('postfix', 'policy', 'daemon', 'greylisting', 'quota', 'rbl'),
 	classifiers=[
 		'Development Status :: 4 - Beta',
