@@ -1,1 +1,1 @@
-__all__ = ['rc', 'policy', 'logging', 'database']
+__all__ = ['database', 'logging', 'policy', 'postfix', 'rc']
