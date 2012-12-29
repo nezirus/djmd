@@ -1,3 +1,4 @@
 https://github.com/downloads/SiteSupport/gevent/gevent-1.0rc2.tar.gz
 python-daemon >= 1.5
-psycopg2 >= 2.4
+psycopg2 >= 2.4.2
+sphinx-me

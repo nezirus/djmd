@@ -8,3 +8,4 @@
 ^build\/
 ^scripts\/rc\.djmd\.local
 ^scripts\/test\.sh
+^docs\/build\/
