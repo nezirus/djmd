@@ -45,10 +45,9 @@ We also recommend running connection pooling software for your database.
 e.g. PgBouncer_ for PostgreSQL.
 
 You should install Python requirements using your system package manager or you
-could configure Python virtualenv for DJM with help of
-``.bootstrap/install.sh`` file.
+could configure Python virtualenv for DJM with help of ``.bootstrap/install.sh`` file.
 
-For detailed installation and configuration instructions see INSTALL.rst file.
+For detailed installation and configuration instructions see "Installation" chapter in the docs.
 
 
 Download
